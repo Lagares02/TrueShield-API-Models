@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routes.entity_classification import router
+from routes.routes import router
 
 app = FastAPI()
 
