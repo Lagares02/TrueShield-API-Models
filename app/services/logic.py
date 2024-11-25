@@ -97,6 +97,9 @@ class LTV_Entity_Classifier_Local():
         self.token_classification(translated_text, "NER", result)
         self.token_classification(translated_text, "PoS", result)
         
+        print("NER: ", result["entityes_NER"])
+        print("PoS: ", result["entityes_PoS"])
+
         # Procesamiento de combinaciones
         self.process_combinations(result["entityes_PoS"], result)
 
@@ -106,14 +109,19 @@ class LTV_Entity_Classifier_Local():
             "keywords_es": [self.translater_en_es_pipeline(kw["word"])[0]['translation_text'] for kw in result["key_words"]]
         }
 
+        print("keywords_es: ", keywords["keywords_es"])
+        print("keywords_en: ", keywords["keywords_en"])
+
         # Creación del response final
         response = {
-            "prompt": sentence,
+            "prompt": translated_text,
             "temporality": datetime.now().strftime("%Y-%m-%d"),
             "location": [kw["word"] for kw in result["key_words"] if kw["entitye"] == "LOC"],
             "keywords": keywords,
             "subjects": [kw["word"] for kw in result["key_words"] if kw["entitye"] in ["PER", "ORG"]]
         }
+
+        print("response: ", response)
 
         return response
 
@@ -154,6 +162,7 @@ def classify_text_relationship(premise, hypothesis):
     max_category = categories[max_prob_index]
     max_probability = predicted_probabilities[max_prob_index]
 
+    print("inferencia: ", max_category)
     # Retornar la categoría con la mayor probabilidad y su valor
     return {
         "category": max_category,
